@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Your apps
     'accounts',
     'vocabulary',
+    'flashcards',
     'grammar',
     'listening',
     'analytics',
