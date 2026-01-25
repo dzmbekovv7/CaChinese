@@ -1,6 +1,19 @@
 from rest_framework import serializers
 from .models import Flashcard
 
+class CreateFlashCard(serializers.ModelSerializer):
+    class Meta:
+        model = Flashcard
+        exclude = [
+            'user'
+        ]
+
+    def create(self, validated_data):
+        validated_data['is_user_card'] = validated_data.get('vocabulary') is None
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
+
 class FlashcardSerializer(serializers.ModelSerializer):
     level = serializers.SerializerMethodField()
     word = serializers.SerializerMethodField()

@@ -25,7 +25,10 @@ class CAChineseUser(models.Model):
     streak = models.IntegerField(default=0)
     daily_goal = models.IntegerField(default=20)  # default 20 cards/day
     joined_at = models.DateTimeField(auto_now_add=True)
+
     theme = models.IntegerField(choices=BACKGROUND_COLOR, default=1)
+    is_verified = models.BooleanField(default=False)
+    verification_code = models.CharField(max_length=50, blank=True, null=True)
     last_active = models.DateTimeField(auto_now=True)
 
     def __str__(self):

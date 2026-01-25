@@ -7,4 +7,5 @@ urlpatterns = [
     path('api/vocabulary/', include('vocabulary.urls')),
     path('api/flashcards/', include('flashcards.urls')),
     path('api/accounts/', include('accounts.urls')),
+    path('api/listening/', include('listening.urls')),
 ]
