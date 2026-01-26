@@ -16,6 +16,14 @@ class ListeningQuestion(models.Model):
     options = models.JSONField(blank=True, null=True)  # for MCQs
     correct_answer = models.TextField()
 
+class UserListeningAnswer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listening_item = models.ForeignKey(ListeningItem, on_delete=models.CASCADE)
+    selected_answers = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    score = models.IntegerField(default=0)
+    completed = models.BooleanField(default=False)
+
 class UserListeningProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listening_item = models.ForeignKey(ListeningItem, on_delete=models.CASCADE)

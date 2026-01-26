@@ -34,14 +34,12 @@ class RegisterSerializer(serializers.Serializer):
         chinese_name = validated_data.get('chinese_name', "")
         avatar = validated_data.get('avatar', None)
 
-        # 1. Create Django User
         user = User.objects.create_user(
             username=email,
             email=email,
             password=password
         )
 
-        # 2. Create profile
         profile = CAChineseUser.objects.create(
             user=user,
             nickname=nickname,
@@ -51,7 +49,6 @@ class RegisterSerializer(serializers.Serializer):
             email=email
         )
 
-        # 🔥 3. AUTO SEND VERIFICATION CODE
         code = str(random.randint(100000, 999999))
         profile.verification_code = code
         profile.save()
@@ -100,7 +97,7 @@ class VerifyEmailSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         email = attrs["email"]
-        code = str(attrs["code"])  # make sure string
+        code = str(attrs["code"])
         user = CAChineseUser.objects.filter(email=email).first()
         if not user:
             raise serializers.ValidationError("User not found.")

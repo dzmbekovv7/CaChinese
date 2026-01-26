@@ -8,4 +8,5 @@ urlpatterns = [
     path('api/flashcards/', include('flashcards.urls')),
     path('api/accounts/', include('accounts.urls')),
     path('api/listening/', include('listening.urls')),
+    path('api/grammar/', include('grammar.urls')),
 ]

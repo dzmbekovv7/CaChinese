@@ -23,7 +23,7 @@ class CAChineseUser(models.Model):
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     daily_xp = models.IntegerField(default=0)
     streak = models.IntegerField(default=0)
-    daily_goal = models.IntegerField(default=20)  # default 20 cards/day
+    daily_goal = models.IntegerField(default=20)
     joined_at = models.DateTimeField(auto_now_add=True)
 
     theme = models.IntegerField(choices=BACKGROUND_COLOR, default=1)
