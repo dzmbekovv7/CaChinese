@@ -1,24 +1,30 @@
 from rest_framework import generics
 from rest_framework import viewsets
 from .models import Flashcard
-from .serializers import FlashcardSerializer,CreateFlashCard
+from .serializers import FlashcardSerializer,CreateFlashCardSerializer, ChangeFlashcardSerializer
 from rest_framework.permissions import IsAuthenticated
 
-class FlashcardViewSet(viewsets.ModelViewSet):
+class getFlashcards(generics.ListAPIView):
     serializer_class = FlashcardSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        qs = Flashcard.objects.filter(user=self.request.user)
-        level = self.request.query_params.get('level')
-        if level:
-            qs = qs.filter(vocabulary__level=level)
-        return qs
+        return Flashcard.objects.filter(user=self.request.user)
 
-
-class CreateFlashcard(generics.CreateAPIView):
-    serializer_class = CreateFlashCard
+class postFlashcard(generics.CreateAPIView):
+    serializer_class = CreateFlashCardSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_serializer_context(self):
-        return {'request': self.request}
+class changeFlashcard(generics.UpdateAPIView):
+    serializer_class = ChangeFlashcardSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Flashcard.objects.filter(user=self.request.user)
+
+class deleteFlashCard(generics.DestroyAPIView):
+    serializer_class = FlashcardSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Flashcard.objects.filter(user=self.request.user)

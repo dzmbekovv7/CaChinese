@@ -1,51 +1,35 @@
 from rest_framework import serializers
 from .models import Flashcard
 
-class CreateFlashCard(serializers.ModelSerializer):
-    class Meta:
-        model = Flashcard
-        exclude = [
-            'user'
-        ]
-
-    def create(self, validated_data):
-        validated_data['is_user_card'] = validated_data.get('vocabulary') is None
-        validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)
 
 
 class FlashcardSerializer(serializers.ModelSerializer):
-    level = serializers.SerializerMethodField()
-    word = serializers.SerializerMethodField()
-    pinyin = serializers.SerializerMethodField()
-    translation = serializers.SerializerMethodField()
-
     class Meta:
         model = Flashcard
-        fields = ['id','word','pinyin','translation','level','timer','mastered','is_user_card']
+        fields = '__all__'
 
-    def get_level(self, obj):
-        if obj.vocabulary:
-            return obj.vocabulary.level
-        return None
+class CreateFlashCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flashcard
+        fields = ['word', 'pinyin', 'translation']
 
-    def get_word(self, obj):
-        if obj.is_user_card:
-            return obj.word
-        if obj.vocabulary:
-            return obj.vocabulary.hanzi
-        return None
+    def create(self, validated_data):
+        user = self.context['request'].user
+        return Flashcard.objects.create(
+            user=user,
+            is_user_card = True,
+            **validated_data
+        )
 
-    def get_pinyin(self, obj):
-        if obj.is_user_card:
-            return obj.pinyin
-        if obj.vocabulary:
-            return obj.vocabulary.pinyin
-        return None
+class ChangeFlashcardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flashcard
+        fields = ['word', 'pinyin', 'translation']
 
-    def get_translation(self, obj):
-        if obj.is_user_card:
-            return obj.translation
-        if obj.vocabulary:
-            return obj.vocabulary.translation
-        return None
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+
