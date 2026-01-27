@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Grammar, GrammarQuestion
 from .serializers import GrammarSerializer, GrammarQuestionSerializer, UserAnswerSerializer
+from core.utils import update_user_streak
 
 class getGrammarView(generics.ListAPIView):
     serializer_class = GrammarSerializer
@@ -24,3 +25,8 @@ class getGrammarQuestion(generics.ListAPIView):
 class userAnswerView(generics.CreateAPIView):
     serializer_class = UserAnswerSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user_answer = serializer.save()
+        update_user_streak(self.request.user)
+        return user_answer
